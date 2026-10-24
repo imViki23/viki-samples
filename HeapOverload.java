@@ -1,10 +1,9 @@
 import java.time.Duration;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-// java -Xms50M -Xmx100M HeapOverload.java
+// java -Xms50M -Xmx50M -XX:+HeapDumpOnOutOfMemoryError HeapOverload.java
 public class HeapOverload {
 
     private static AtomicBoolean running = new AtomicBoolean(true);
@@ -16,14 +15,12 @@ public class HeapOverload {
             running.set(false);
         }));
 
-        List<String> data = new LinkedList<>();
+        List<User> data = new ArrayList<>();
 
         while (running.get()) {
 
-            int counter = 0;
-            while (counter < 100000) {
-                data.add(UUID.randomUUID().toString());
-                counter++;
+            for (int i = 0; i < 100000; i++) {
+                data.add(new User());
             }
 
             long maxHeapMemory = runtime.maxMemory() / (1024 * 1024);
@@ -31,12 +28,17 @@ public class HeapOverload {
             long freeMemory = runtime.freeMemory() / (1024 * 1024);
             long usedMemory = totalMemory - freeMemory;
             System.out.println("Heap (" + maxHeapMemory + "MB): " + usedMemory + "MB / " + totalMemory + "MB");
-            
+
             try {
                 Thread.sleep(Duration.ofSeconds(2));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static class User {
+        public String name = "MyTestName";
+        public Integer age = 5;
     }
 }
