@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: 'postgres:17.11'
+    container_name: 'postgres_playground'
+    environment:
+      - 'POSTGRES_DB=test'
+      - 'POSTGRES_PASSWORD=test'
+      - 'POSTGRES_USER=test'
+    command: postgres -c timezone=UTC -c wal_level=logical -c max_replication_slots=4 -c max_wal_senders=4
+    ports:
+      - '5432:5432'
