@@ -1,6 +1,6 @@
 # FAQ
 
-## Functional interface ?
+## Functional interface
 
 *Before Java 8* - Java did not support passing methods or blocks of logic directly. To pass behavior into a method (such as a callback or a sorting comparator), developers had to wrap that logic inside an anonymous inner class—essentially creating a temporary object just to carry a single method.
 
@@ -11,8 +11,12 @@
 
 ## Types of JVM process memory
 
-- Heap (Young Gen - Eden space and Survivor space S0 and S1, Old / Tenured Gen)
-- Metaspace - Starting with Java 8, PermGen was completely removed and replaced by Metaspace, which resides in Native Memory (Off-Heap) managed directly by the operating system, rather than the JVM heap. By default, Metaspace dynamically grows as needed up to the limit of the host OS native memory. By default, Metaspace dynamically grows as needed up to the limit of the host OS native memory.
+- *Heap* - To store objects
+    - Young Gen
+        - Eden space
+        - Survivor space S0 and S1
+    - Old / Tenured Gen
+- *Metaspace* - Starting with Java 8, PermGen was completely removed and replaced by Metaspace, which resides in Native Memory (Off-Heap) managed directly by the operating system, rather than the JVM heap. By default, Metaspace dynamically grows as needed up to the limit of the host OS native memory.
 
 ## Garbage collection lifecycle
 
@@ -34,29 +38,8 @@
 
 ## SAGA pattern
 
-In a traditional monolithic application, maintaining data consistency is easy: you use a single database and rely on ACID transactions (Atomicity, Consistency, Isolation, Durability) with a simple BEGIN TRANSACTION and COMMIT or ROLLBACK.
-
-## About usage of generics
-
-When a generic type parameter <T> is declared at the class level, it is automatically available to all non-static methods in that class. However, if you place <T> again right after public in a method signature, you are declaring a method-level type parameter. This creates a brand-new, independent generic type that completely shadows (hides) the class-level T, causing compiler conflicts if you try to mix them. To use the class-level type, simply omit the angle brackets in the method signature.
-
-```java
-public class CustomOptional<T> {
-
-    public <R> CustomOptional<R> map(Function<T, R> consumerFn) {
-        if (this.data == null) {
-            return empty();
-        }
-        return CustomOptional.of(consumerFn.apply(data));
-    }
-
-    // filter should not have <T> after public
-    public <T> CustomOptional<T> filter(Predicate<? super T> predicateFn) {
-        if (this.data == null) {
-            return empty();
-        }
-        return predicateFn.test(this.data) ? this : empty();
-    }
-
-}
-```
+- In a microservices architecture, services maintain strict database isolation. For example, the Order Service should only access order-related tables, and the Shipping Service should only access shipping-related tables.
+- However, what happens when a transaction fails midway—such as a payment failure—and you need to roll back changes made in the shipping tables? Because the Order Service cannot directly access the Shipping Service's database, the Shipping Service must expose a dedicated API (acting as a compensating transaction) that safely performs the necessary 'undo' operation.
+- Two way to implement
+    - *Choreography* - Services talk directly to each other by listening to and publishing events/messages (e.g., via Kafka, RabbitMQ). There is no central controller.
+    - *Orchestration* - A central SAGA Orchestrator (e.g., using Temporal, Camunda, or a dedicated Spring Boot workflow) tells each service what local transaction to execute next and handles trigger compensation logic. Chore.
