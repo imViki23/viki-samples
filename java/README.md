@@ -52,11 +52,3 @@ Traditionally, whether you create a new thread using the Thread class or an Exec
 While the best practice is to build a highly non-blocking application, that is often not entirely feasible in the current Java ecosystem—for example, when dealing with blocking SQL database queries. Because SQL database queries are blocking, the thread has to wait for a response. If I create only 8 threads and make 8 parallel database calls, all threads become blocked until the database responds, leaving any further requests from clients waiting in a blocked state.
 
 This is where virtual threads come into the picture. The main aim of a virtual thread is to avoid blocking the underlying platform thread. If an operation (such as a database query) blocks, the JVM unmounts the virtual thread, releases the platform thread to take care of other virtual threads, and leaves only that specific virtual thread in a waiting state. Because virtual threads are managed entirely by the Java runtime rather than directly tied one-to-one to OS threads, blocking them is inexpensive, and we can even spawn millions of them safely.
-
-## SAGA pattern
-
-- In a microservices architecture, services maintain strict database isolation. For example, the Order Service should only access order-related tables, and the Shipping Service should only access shipping-related tables.
-- However, what happens when a transaction fails midway—such as a payment failure—and you need to roll back changes made in the shipping tables? Because the Order Service cannot directly access the Shipping Service's database, the Shipping Service must expose a dedicated API (acting as a compensating transaction) that safely performs the necessary 'undo' operation.
-- Two way to implement
-    - *Choreography* - Services talk directly to each other by listening to and publishing events/messages (e.g., via Kafka, RabbitMQ). There is no central controller.
-    - *Orchestration* - A central SAGA Orchestrator (e.g., using Temporal, Camunda, or a dedicated Spring Boot workflow) tells each service what local transaction to execute next and handles trigger compensation logic. Chore.
