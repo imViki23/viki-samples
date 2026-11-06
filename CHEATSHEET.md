@@ -1,3 +1,7 @@
+## C
+
+- `gcc -o output_file_path input_file.c` - Compile C code e.g. `gcc -o ./bin/main ./src/main.c`
+
 ## Java
 
 - `ps -ef | grep java` - To list all java process
