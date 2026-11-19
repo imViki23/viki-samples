@@ -1,2 +1,8 @@
 /bin
 *.out
+
+*scratchpad*
+
+__pycache__
+
+.vscode
