@@ -69,3 +69,14 @@
 - `-le` - Alias for `-le`
 - `-gt` - Alias for `-gt`
 - `-ge` - Alias for `-ge`
+
+### Python uv
+
+- `uv python install 3.12` - To install python version 3.12 using uv
+- `uv python uninstall 3.12` - To uninstall python version 3.12
+- `uv init` - Initializes uv in the current directory
+- `uv venv` - Creates a virtual environment using python version 3.12
+- `uv add ${pkg}` - Installs to .venv and updates pyproject.toml + uv.lock
+- `uv add --dev pytest` - Installs to .venv and updates pyproject.toml + uv.lock as dev dependency
+- `uv remove ${pkg}` - Removes from .venv and updates pyproject.toml
+- `uv sync` - Recreates .venv from .python-version and uv.lock

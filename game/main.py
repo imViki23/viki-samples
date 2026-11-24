@@ -10,8 +10,8 @@ class Game(arcade.Window):
         self.elapsed_time = 0
         self.ground = Ground( x = Constants.WORLD_WIDTH / 2, y = 0, width = Constants.WORLD_WIDTH, height = 0.25 )
         self.ball_1 = GameObject( x = Constants.WORLD_WIDTH * 0.5, y = Constants.WORLD_HEIGHT, radius = 0.25 )
-        self.ball_2 = GameObject( x = Constants.WORLD_WIDTH * 0.75, y = Constants.WORLD_HEIGHT, radius = 0.25, gravity=0 )
-        self.ball_2.apply_impulse(arcade.Vec2(0, -10))
+        self.ball_2 = GameObject( x = Constants.WORLD_WIDTH * 0.25, y = Constants.WORLD_HEIGHT * 0.25, radius = 0.25 )
+        self.ball_2.apply_impulse(arcade.Vec2(4, 15))
 
     def on_mouse_press(self, x, y, button, modifiers):
         world_x = x / Constants.PPM
